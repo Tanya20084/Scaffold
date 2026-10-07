@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -38,20 +42,52 @@ fun BasicScaffold()
 {
     Scaffold(
         topBar = { TopAppBar(
-        title = { Text("Home")}
+        title = { Text("Home")},
+            navigationIcon = {
+                IconButton(onClick = {}) {
+                    Icon(
+                        painter = painterResource( id = R.drawable.ic_menu),
+                        contentDescription = "menu"
+                    )
+                }
+            }
     )
+        },
+        bottomBar =  {
+            NavigationBar {
+                NavigationBarItem(
+                    icon = { Icon(
+                        painter = painterResource( id = R.drawable.ic_home),
+                        contentDescription = "Home"
+                    )},
+                    label = {Text("Home")},
+                    selected = true,
+                    onClick = {}
+
+                )
+                NavigationBarItem(
+                    icon = { Icon(
+                        painter = painterResource( id = R.drawable.ic_search),
+                        contentDescription = "Search"
+                    )},
+                    label = {Text("Search")},
+                    selected = false,
+                    onClick = {}
+
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {}) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_favorite),
-                    contentDescription = ""
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = "Add"
                 )
             }
         }
     ) { innerPadding ->
-        Column( modifier = Modifier.padding(paddingValues = innerPadding)) {
-            Text("Main content")
+        Box( modifier = Modifier.padding(paddingValues = innerPadding)) {
+            Text("Screen content")
         }
 
     }
