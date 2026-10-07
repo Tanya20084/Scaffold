@@ -1,31 +1,40 @@
 package com.example.scaffold_lesson
 
 import android.os.Bundle
+import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,85 +59,121 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(markerClass = arrayOf(ExperimentalMaterial3Api::class))
 @Composable
-fun BasicScaffold()
-{
-    val snackbarHostState = remember { SnackbarHostState () }
+fun BasicScaffold() {
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        topBar = { TopAppBar(
-        title = { Text("Top app bar")},
-            navigationIcon = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource( id = R.drawable.ic_menu),
-                        contentDescription = "menu"
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painterResource(R.drawable.logo),
+                        contentDescription = "logo",
+                        modifier = Modifier.size(115.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    NavigationDrawerItem(
+                        label = { Text("Home") },
+                        selected = true,
+                        onClick = {}
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    NavigationDrawerItem(
+                        label = { Text("Search") },
+                        selected = false,
+                        onClick = {}
+                    )
+                }
+            }
+        },
+        content = {
+
+        Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            topBar = {
+                TopAppBar(
+                    title = { Text("Top app bar") },
+                    navigationIcon = {
+                        IconButton(onClick = {scope.launch { drawerState.open() }}) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_menu),
+                                contentDescription = "menu"
+                            )
+                        }
+                    },
+                    colors = topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+            },
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_home),
+                                contentDescription = "Home"
+                            )
+                        },
+                        label = { Text("Home") },
+                        selected = true,
+                        onClick = {}
+
+                    )
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_search),
+                                contentDescription = "Search"
+                            )
+                        },
+                        label = { Text("Search") },
+                        selected = false,
+                        onClick = {}
+
                     )
                 }
             },
-            colors = topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            )
-    )
-        },
-        bottomBar =  {
-            NavigationBar {
-                NavigationBarItem(
-                    icon = { Icon(
-                        painter = painterResource( id = R.drawable.ic_home),
-                        contentDescription = "Home"
-                    )},
-                    label = {Text("Home")},
-                    selected = true,
-                    onClick = {}
-
-                )
-                NavigationBarItem(
-                    icon = { Icon(
-                        painter = painterResource( id = R.drawable.ic_search),
-                        contentDescription = "Search"
-                    )},
-                    label = {Text("Search")},
-                    selected = false,
-                    onClick = {}
-
-                )
-            }
-        },
-        floatingActionButton = {
-            Column() {
-                FloatingActionButton(onClick = {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("Snackbar. Press +")
+            floatingActionButton = {
+                Column() {
+                    FloatingActionButton(onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Snackbar. Press +")
+                        }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_add),
+                            contentDescription = "Add"
+                        )
                     }
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = "Add"
-                    )
-                }
-                Spacer(Modifier.height(16.dp))
-                FloatingActionButton(onClick = {
-                    scope.launch { snackbarHostState.showSnackbar("Snackbar. Press favorite") }
-                }) {
-                    Icon(
-                        painter = painterResource(id=R.drawable.ic_favorite),
-                        contentDescription = "Add"
-                    )
+                    Spacer(Modifier.height(16.dp))
+                    FloatingActionButton(onClick = {
+                        scope.launch { snackbarHostState.showSnackbar("Snackbar. Press favorite") }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_favorite),
+                            contentDescription = "Add"
+                        )
+                    }
                 }
             }
-        }
-    ) { innerPadding ->
-        Box( modifier = Modifier.padding(paddingValues = innerPadding)) {
-            Text("Screen content",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 16.dp)
-            )
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(paddingValues = innerPadding)) {
+                Text(
+                    "Screen content",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+
+            }
 
         }
 
     }
-
+    )
 }
+
